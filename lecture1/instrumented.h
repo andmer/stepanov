@@ -1,52 +1,81 @@
-//
-// Created by andmer on 3/20/16.
-//
-
 #ifndef LECTURE1_INSTRUMENTED_H
 #define LECTURE1_INSTRUMENTED_H
 
+#include <cstddef>
 
-//
-// Created by andmer on 3/20/16.
-//
+struct instrumented_base {
+    enum operations {
+        n, copy, assignment, dtor, default_ctor, comparison, ordering, construction
+    };
 
-#include <cstdio>
-#include <iostream>
+    static const size_t number_ops = 8;
+    static double counts[number_ops];
+    static const char* counter_names[number_ops];
 
-#ifndef LECTURE1_INSTRUMENTED_H
-#define LECTURE1_INSTRUMENTED_H
-
-#endif //LECTURE1_INSTRUMENTED_H
+    static void initialize(size_t);
+};
 
 template<typename T>
-class instrumented {
-public:
-    const static size_t number_ops = 10;
-    static constexpr const char* counter_names[2] = {"a", "b"};
-    static constexpr double* counts = (double*) 4;
+struct instrumented : instrumented_base {
+    typedef T value_type;
+    T value;
 
-    instrumented() = default;
+    // conversion from T to T:
+    explicit instrumented(const T& x) : value(x) { ++counts[construction]; }
 
-    instrumented(T&) {
-        printf("ref ctor");
-    };
+    explicit operator T() const { return value; }
 
-    instrumented(const instrumented& copy) {
-        //
-    };
+    template<typename U>
+    instrumented(const instrumented<U>& x) { value = x.value; }
 
-    instrumented& operator=(const instrumented& assn) {
+    // semiregular type:
+    instrumented() { ++counts[default_ctor]; }
+
+    instrumented(const instrumented& x) : value(x.value) {
+        ++counts[copy];
+    }
+
+    ~instrumented() { ++counts[dtor]; }
+
+    instrumented& operator=(const instrumented& x) {
+        ++counts[assignment];
+        value = x.value;
         return *this;
-    };
+    }
 
-    bool operator<(const instrumented& cmp) {
-        /* do actual comparison */
-        return true;
-    };
+    // regular type:
+    friend
+    bool operator==(const instrumented& x, const instrumented& y) {
+        ++counts[comparison];
+        return x.value == y.value;
+    }
 
-    static void initialize(size_t i) {
-        std::cout << i << std::endl;
-    };
+    friend
+    bool operator!=(const instrumented& x, const instrumented& y) {
+        return !(x == y);
+    }
+
+    // totally ordered type:
+    friend
+    bool operator<(const instrumented& x, const instrumented& y) {
+        ++counts[ordering];
+        return x.value < y.value;
+    }
+
+    friend
+    bool operator>(const instrumented& x, const instrumented& y) {
+        return y < x;
+    }
+
+    friend
+    bool operator<=(const instrumented& x, const instrumented& y) {
+        return !(y < x);
+    }
+
+    friend
+    bool operator>=(const instrumented& x, const instrumented& y) {
+        return !(x < y);
+    }
 };
 
 #endif //LECTURE1_INSTRUMENTED_H

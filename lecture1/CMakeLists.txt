@@ -7,10 +7,12 @@ set(SOURCE_FILES
     concepts.h
     count_operations.cpp
     count_operations.h
-    #    count_operations_normalized.cpp
+#    count_operations_normalized.cpp
     functorized.h
     iota.h
     setsort.h
-    table_util.h instrumented.h instrumented.cpp instrumented.h)
+    table_util.h
+    instrumented.h
+    instrumented.cpp)
 
-add_executable(lecture1 ${SOURCE_FILES})
+add_executable(count_operations ${SOURCE_FILES})
