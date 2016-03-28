@@ -1,7 +1,7 @@
 #ifndef LECTURE1_INSTRUMENTED_H
 #define LECTURE1_INSTRUMENTED_H
 
-#include <cstddef>
+#include <cstdlib>
 
 struct instrumented_base {
     enum operations {
@@ -23,20 +23,27 @@ struct instrumented : instrumented_base {
     // conversion from T to T:
     explicit instrumented(const T& x) : value(x) { ++counts[construction]; }
 
+    // conversion from instrumented to T
     explicit operator T() const { return value; }
 
+    // convert from instrumented<U> to instrumented<U>
     template<typename U>
     instrumented(const instrumented<U>& x) { value = x.value; }
 
-    // semiregular type:
+    //semiregular type:
+
+    //default ctor
     instrumented() { ++counts[default_ctor]; }
 
+    //copy ctor
     instrumented(const instrumented& x) : value(x.value) {
         ++counts[copy];
     }
 
+    //dtor
     ~instrumented() { ++counts[dtor]; }
 
+    //assignment operator
     instrumented& operator=(const instrumented& x) {
         ++counts[assignment];
         value = x.value;
