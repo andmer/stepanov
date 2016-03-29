@@ -23,62 +23,62 @@
 #define IteratorCategory(I) typename std::iterator_traits<I>::iterator_category
 
 struct less {
-  template <TotallyOrdered T>
-  bool operator()(const T& x, const T& y) { 
-    return x < y;
-  }
+    template<TotallyOrdered T>
+    bool operator()(const T& x, const T& y) {
+        return x < y;
+    }
 };
 
-template <InputIterator I>
+template<InputIterator I>
 inline
 I successor(I x) { return ++x; }
 
-template <BidirectionalIterator I>
+template<BidirectionalIterator I>
 inline
 I predecessor(I x) { return ++x; }
 
-template <RandomAccessIterator I, Integral N>
+template<RandomAccessIterator I, Integral N>
 inline
-I successor(I x, N n, std::random_access_iterator_tag) { 
-  return x + n;
+I successor(I x, N n, std::random_access_iterator_tag) {
+    return x + n;
 }
 
-template <InputIterator I, Integral N>
+template<InputIterator I, Integral N>
 inline
-I successor(I x, N n, std::input_iterator_tag) { 
-  while (n != N(0)) {
-    ++x;
-    --n;
-  }
-  return x;
+I successor(I x, N n, std::input_iterator_tag) {
+    while (n != N(0)) {
+        ++x;
+        --n;
+    }
+    return x;
 }
 
-template <InputIterator I, Integral N>
+template<InputIterator I, Integral N>
 inline
 I successor(I x, N n) {
-  return successor(x, n, IteratorCategory(I)());
+    return successor(x, n, IteratorCategory(I)());
 }
 
-template <RandomAccessIterator I, Integral N>
+template<RandomAccessIterator I, Integral N>
 inline
-I successor_guarded(I first, I last, N n, std::random_access_iterator_tag) { 
-  return first + std::min(n, last - first);
+I successor_guarded(I first, I last, N n, std::random_access_iterator_tag) {
+    return first + std::min(n, last - first);
 }
 
-template <InputIterator I, Integral N>
+template<InputIterator I, Integral N>
 inline
-I successor_guarded(I first, I last, N n, std::input_iterator_tag) { 
-  while (n != N(0) && first != last) {
-    ++first;
-    --n;
-  }
-  return first;
+I successor_guarded(I first, I last, N n, std::input_iterator_tag) {
+    while (n != N(0) && first != last) {
+        ++first;
+        --n;
+    }
+    return first;
 }
 
-template <InputIterator I, Integral N>
+template<InputIterator I, Integral N>
 inline
 I successor_guarded(I first, I last, N n) {
-  return successor_guarded(first, last, n, IteratorCategory(I)());
+    return successor_guarded(first, last, n, IteratorCategory(I)());
 }
 
 #endif

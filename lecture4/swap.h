@@ -1,17 +1,16 @@
-
-template <typename T>
+template<typename T>
 // requires T is Semiregular
 inline
 void swap(T& a, T& b) {
     T tmp(a);
     a = b;
-    b = tmp; 
+    b = tmp;
 }
 
 // partial specialization (won't actually work here, needs to be friend of vector)
-template <typename T>
+template<typename T>
 inline
-void swap(std::vector<T>& a, std::vector<T>& b) {
+void swap(std::vector <T>& a, std::vector <T>& b) {
     // swap headers of a and b
     // fix back pointers (if they exist)
 }
@@ -22,7 +21,7 @@ std::vector<int> b(1000000);
 swap(a, b);
 */
 
-template <typename T>
+template<typename T>
 // requires T is UnsignedIntegral
 inline
 void swap_xor(T& a, T& b) {

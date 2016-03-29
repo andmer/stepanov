@@ -19,8 +19,8 @@ double dont_normalize(double x, double) { return x; }
 
 template<typename Function>
 void count_operations(size_t i, size_t j, Function fun, double (* norm)(double, double) = dont_normalize) {
-// measure operations on an interval of a given length
-// ranging from i to j and going through i, 2i, 4i, ... up to and including j
+    // measure operations on an interval of a given length
+    // ranging from i to j and going through i, 2i, 4i, ... up to and including j
 
     size_t cols = instrumented<double>::number_ops;
 
